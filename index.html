@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Маркетплейсы Resfood · 2025/26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#F8F4EC;
+  --bg-2:#F1ECDF;
+  --paper:#FCF9F2;
+  --white:#FFFFFF;
+  --ink:#1A1814;
+  --ink-2:#3A352E;
+  --ink-3:#5A5246;
+  --muted:#867C70;
+  --line:#EBE3D2;
+  --line-2:#DDD2BC;
+  --red:#C8302A;
+  --red-d:#9E2520;
+  --red-l:#E89189;
+  --red-bg:#FBE5E2;
+  --red-soft:#F4D2CE;
+  --green:#2D4A35;
+  --green-d:#1F3527;
+  --green-l:#6E8B6F;
+  --green-bg:#E2EAD9;
+  --green-soft:#CFDDC2;
+  --gold:#C9941F;
+  --gold-bg:#F5E5BE;
+  /* Marketplace brand colors */
+  --ozon:#005BFF;
+  --ozon-d:#003ECC;
+  --ozon-bg:#E0EBFF;
+  --wb:#CB11AB;
+  --wb-d:#841176;
+  --wb-bg:#F8E0F2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;font-feature-settings:'cv02','cv03','cv04','cv11'}
+body{background:var(--bg)}
+
+/* Slide deck */
+.deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:48px 64px 64px;opacity:0;visibility:hidden;transform:translateX(36px);transition:opacity .5s cubic-bezier(.2,.7,.2,1), transform .5s cubic-bezier(.2,.7,.2,1)}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.slide.prev{transform:translateX(-36px)}
+
+/* Header bar */
+.tbar{display:flex;align-items:center;justify-content:space-between;font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;font-weight:600}
+.tbar .brand{display:flex;align-items:center;gap:12px}
+.brand-mark{display:flex;align-items:center;gap:0}
+.brand-mark .sq{width:32px;height:32px;border-radius:6px;background:var(--red);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:800;font-size:15px;letter-spacing:-.02em;overflow:hidden}
+.brand-mark .sq img{width:100%;height:100%;object-fit:contain;display:block}
+.brand-mark .nm{margin-left:12px;font-size:13px;font-weight:700;color:var(--ink);letter-spacing:.04em;text-transform:uppercase}
+.tbar .right{display:flex;align-items:center;gap:18px}
+.dot{width:4px;height:4px;border-radius:50%;background:var(--ink);opacity:.3}
+
+/* Footer bar */
+.fbar{position:absolute;left:64px;right:64px;bottom:24px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.04em}
+.progress{flex:1;margin:0 30px;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.progress > i{display:block;height:100%;background:var(--red);width:0;transition:width .5s ease}
+
+/* Body */
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;margin-top:14px}
+
+/* Typography — Inter throughout */
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:14px}
+h1.t{font-weight:800;font-size:58px;line-height:1.0;letter-spacing:-0.025em;color:var(--ink)}
+h2.t{font-weight:800;font-size:48px;line-height:1.05;letter-spacing:-0.02em;color:var(--ink);max-width:1100px}
+h3.t{font-weight:700;font-size:36px;line-height:1.1;letter-spacing:-0.015em}
+.sub{font-size:17px;line-height:1.5;color:var(--ink-2);max-width:880px;margin-top:16px;font-weight:400}
+.tiny{font-size:12.5px;color:var(--muted);font-weight:500;letter-spacing:.01em}
+
+/* Big number */
+.bignum-wrap{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:8px}
+.bignum{font-weight:900;font-size:240px;line-height:.85;letter-spacing:-0.05em;color:var(--ink);display:flex;align-items:flex-start}
+.bignum .unit{font-size:54px;font-weight:700;color:var(--red);margin-left:18px;margin-top:14px;letter-spacing:-.02em}
+.bignum.red{color:var(--red)}
+.caption{font-size:20px;line-height:1.45;color:var(--ink-2);max-width:780px;margin-top:24px;font-weight:500}
+.note{margin-top:18px;font-size:13.5px;color:var(--muted);max-width:700px;font-weight:500}
+
+/* Cover */
+.cover{display:grid;grid-template-columns: 1.05fr 1fr;gap:60px;align-items:end;height:100%}
+.cover .left h1{font-weight:800;font-size:90px;line-height:.96;letter-spacing:-.03em;color:var(--ink)}
+.cover .left h1 .accent{color:var(--red)}
+.cover .left .meta{margin-top:34px;font-size:13px;color:var(--muted);letter-spacing:.1em;font-weight:700;text-transform:uppercase}
+.cover .right{display:flex;flex-direction:column;align-items:flex-end;gap:14px;padding-bottom:8px}
+.cover .right .num{font-weight:900;font-size:200px;line-height:.85;color:var(--red);letter-spacing:-.05em}
+.cover .right .label{font-size:16px;color:var(--ink-2);max-width:380px;text-align:right;line-height:1.5;font-weight:500}
+.cover .right .unit-line{font-size:18px;font-weight:700;color:var(--red-d);letter-spacing:.04em;text-transform:uppercase}
+
+/* Five reasons */
+.five-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:24px}
+.reason{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:24px 22px;display:flex;flex-direction:column;gap:14px;min-height:340px;position:relative;overflow:hidden;transition:transform .3s ease, box-shadow .3s ease}
+.reason::before{content:"";position:absolute;left:0;top:0;width:4px;height:100%;background:var(--red)}
+.reason:nth-child(2)::before,.reason:nth-child(4)::before{background:var(--green)}
+.reason:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(158,37,32,.3)}
+.reason .num{font-weight:800;font-size:36px;color:var(--red);line-height:1;letter-spacing:-.02em}
+.reason:nth-child(2) .num,.reason:nth-child(4) .num{color:var(--green)}
+.reason .title{font-weight:700;font-size:19px;line-height:1.2;color:var(--ink);letter-spacing:-.01em}
+.reason .metric{display:inline-block;background:var(--red-bg);color:var(--red-d);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:6px;width:fit-content}
+.reason:nth-child(2) .metric,.reason:nth-child(4) .metric{background:var(--green-bg);color:var(--green-d)}
+.reason .body{font-size:13px;line-height:1.55;color:var(--ink-3);font-weight:400}
+
+/* Section dividers */
+.divider-slide{display:flex;flex-direction:column;justify-content:center;height:100%;position:relative}
+.divider-bgnum{position:absolute;right:0;top:50%;transform:translateY(-50%);font-weight:900;font-size:520px;line-height:.85;color:var(--red);opacity:.07;letter-spacing:-.06em;pointer-events:none}
+.divider-content{position:relative;z-index:2;max-width:1100px}
+.divider-lab{display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:24px}
+.divider-lab .dotg{width:8px;height:8px;border-radius:50%;background:var(--red)}
+.divider-content h2{font-weight:800;font-size:88px;line-height:.98;letter-spacing:-.03em;color:var(--ink)}
+.divider-underline{width:80px;height:5px;background:var(--green);margin-top:32px;border-radius:3px}
+.divider-sub{font-size:20px;color:var(--ink-2);margin-top:24px;max-width:700px;line-height:1.45;font-weight:500}
+
+/* Comparison */
+.cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:30px;align-items:stretch;height:100%}
+.cmp .col{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:36px 34px;min-height:380px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cmp .col.red{background:var(--red-bg);border-color:var(--red-soft)}
+.cmp .col.red::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle, rgba(200,48,42,.13), transparent 60%);bottom:-100px;right:-90px}
+.cmp .col h4{font-size:12px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700}
+.cmp .col .big{font-weight:900;font-size:140px;line-height:.85;letter-spacing:-.05em;color:var(--ink);margin-top:16px}
+.cmp .col.red .big{color:var(--red)}
+.cmp .col .label{margin-top:18px;font-size:17px;line-height:1.4;color:var(--ink-2);font-weight:500}
+.cmp .col .small{margin-top:8px;font-size:13px;color:var(--muted);line-height:1.5}
+.cmp .vs{font-size:32px;color:var(--muted);font-weight:300;align-self:center}
+
+/* Marketplace branded cards (slide 5) */
+.cmp .col.ozon{background:var(--white);border-color:var(--ozon);border-top-width:5px;border-top-style:solid}
+.cmp .col.ozon::after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle, rgba(0,91,255,.10), transparent 60%);bottom:-100px;right:-90px;pointer-events:none}
+.cmp .col.ozon .big{color:var(--ozon)}
+.cmp .col.ozon .brand-tag{color:var(--ozon)}
+.cmp .col.wb{background:var(--white);border-color:var(--wb);border-top-width:5px;border-top-style:solid}
+.cmp .col.wb::after{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle, rgba(203,17,171,.08), transparent 60%);bottom:-90px;right:-80px;pointer-events:none}
+.cmp .col.wb .big{color:var(--wb)}
+.cmp .col.wb .brand-tag{color:var(--wb)}
+.brand-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.brand-chip{display:inline-flex;align-items:center;justify-content:center;height:26px;padding:0 12px;border-radius:6px;color:#fff;font-weight:800;font-size:12px;letter-spacing:.04em}
+.brand-chip.ozon{background:var(--ozon)}
+.brand-chip.wb{background:var(--wb)}
+.brand-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em}
+.cmp .col.ozon .hl-pill{background:var(--ozon-bg);color:var(--ozon-d)}
+.cmp .col.ozon .hl-pill .dot-r{background:var(--ozon)}
+
+/* Chart slide */
+.chart-slide{display:grid;grid-template-rows:auto 1fr auto;height:100%;gap:18px}
+.chart-canvas{position:relative;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:28px 30px}
+.chart-canvas canvas{position:absolute;left:30px;right:30px;top:30px;bottom:30px;width:calc(100% - 60px) !important;height:calc(100% - 60px) !important}
+.chart-anno{display:flex;gap:24px;font-size:12.5px;color:var(--ink-2);font-weight:500;flex-wrap:wrap;align-items:center}
+.chart-anno b{color:var(--red);font-weight:700}
+.hl-pill{display:inline-flex;align-items:center;gap:8px;background:var(--red-bg);color:var(--red-d);padding:8px 14px;border-radius:6px;font-weight:700;font-size:12.5px}
+.hl-pill .dot-r{width:6px;height:6px;border-radius:50%;background:var(--red)}
+.hl-pill.green{background:var(--green-bg);color:var(--green-d)}
+.hl-pill.green .dot-r{background:var(--green)}
+
+/* ABC split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:24px;height:100%}
+.split .card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:36px;display:flex;flex-direction:column;gap:18px;position:relative;overflow:hidden}
+.split .card.A{background:var(--red-bg);border-color:var(--red-soft)}
+.split .card .lbl{display:inline-flex;align-items:center;gap:10px;font-size:11.5px;letter-spacing:.14em;color:var(--red-d);text-transform:uppercase;font-weight:700;width:fit-content}
+.split .card.C .lbl{color:var(--muted)}
+.split .card .class-badge{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:10px;background:var(--red);color:#fff;font-weight:900;font-size:24px;letter-spacing:-.02em}
+.split .card.C .class-badge{background:var(--ink-3)}
+.split .card .class-row{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.split .card .class-row .meta{display:flex;flex-direction:column}
+.split .card .class-row .meta .lbl{margin:0}
+.split .card .class-row .meta .name{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px}
+.split .card.C .class-row .meta .name{color:var(--muted)}
+.split .card h3{font-weight:800;font-size:36px;line-height:1.05;color:var(--ink);letter-spacing:-.02em}
+.split .card .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px}
+.split .card .stat{background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:10px;padding:16px}
+.split .card.C .stat{background:var(--paper)}
+.split .card .stat .v{font-weight:800;font-size:32px;line-height:1;color:var(--ink);letter-spacing:-.02em}
+.split .card .stat .n{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:6px}
+.split .card .desc{font-size:14px;line-height:1.55;color:var(--ink-3);margin-top:auto;font-weight:400}
+
+/* Table */
+.tbl-wrap{margin-top:18px;background:var(--white);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.cat{width:100%;border-collapse:collapse;font-size:13.5px}
+table.cat thead th{background:var(--bg-2);text-align:left;padding:14px 16px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);font-weight:700;border-bottom:1px solid var(--line)}
+table.cat td{padding:13px 16px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:middle}
+table.cat tr:last-child td{border-bottom:none}
+table.cat td.cat-name{font-weight:600;color:var(--ink)}
+table.cat td.share{font-weight:800;font-size:18px;color:var(--ink);letter-spacing:-.02em}
+table.cat td.lead-1 .share{color:var(--red)}
+.bar-mini{position:relative;height:5px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:5px;width:120px}
+.bar-mini i{position:absolute;left:0;top:0;height:100%;background:var(--red);border-radius:99px;width:0;transition:width 1s ease}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;padding:5px 9px;border-radius:6px;letter-spacing:.04em;text-transform:uppercase}
+.tag.green{background:var(--green-bg);color:var(--green-d)}
+.tag.yellow{background:var(--gold-bg);color:#7A5400}
+.tag.red{background:var(--red-bg);color:var(--red-d)}
+.tag.gray{background:var(--bg-2);color:#5A5246}
+
+/* Three columns */
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px}
+.three-col.five{grid-template-columns:repeat(5,1fr);gap:14px}
+.col-card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:26px 24px;display:flex;flex-direction:column;gap:14px;min-height:300px;position:relative;overflow:hidden}
+.col-card::before{content:"";position:absolute;left:0;top:0;width:4px;height:100%;background:var(--red)}
+.col-card.green::before{background:var(--green)}
+.col-card .num{font-weight:800;font-size:42px;color:var(--red);line-height:1;letter-spacing:-.03em}
+.col-card.green .num{color:var(--green)}
+.col-card h4{font-weight:700;font-size:21px;line-height:1.2;color:var(--ink);letter-spacing:-.01em}
+.col-card .metric{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--red-d);background:var(--red-bg);padding:6px 10px;border-radius:6px;width:fit-content}
+.col-card.green .metric{color:var(--green-d);background:var(--green-bg)}
+.col-card .body{font-size:13px;line-height:1.55;color:var(--ink-3)}
+
+/* AI link slide */
+.ai-slide{display:grid;grid-template-columns:1.05fr 1fr;gap:36px;height:100%;align-items:center}
+.ai-slide .left{padding-right:20px}
+.ai-slide .right{background:linear-gradient(135deg, #1A2820 0%, #1F3527 100%);border-radius:18px;padding:42px;color:#F4ECDB;height:100%;max-height:520px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.ai-slide .right::before{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle, rgba(200,48,42,.4), transparent 65%);top:-90px;right:-90px}
+.ai-slide .right .lab{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--red-l);font-weight:700;z-index:2;position:relative}
+.ai-slide .right .ttl{font-weight:800;font-size:36px;line-height:1.1;margin-top:14px;z-index:2;position:relative;letter-spacing:-.02em}
+.ai-slide .right .ttl .accent{color:var(--red-l)}
+.ai-slide .right .url{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;color:var(--red-l);margin-top:24px;word-break:break-all;z-index:2;position:relative}
+.ai-slide .right .cta{display:inline-flex;align-items:center;gap:10px;background:var(--red);color:#FFF;padding:14px 22px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;margin-top:24px;width:fit-content;z-index:2;position:relative;transition:transform .2s ease, background .2s ease}
+.ai-slide .right .cta:hover{transform:translateX(4px);background:var(--red-d)}
+.ai-slide .right .arrow{font-size:18px}
+
+/* Forecast layout (slide 14) */
+.forecast-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+.forecast-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:24px 28px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.forecast-card.red{background:var(--red-bg);border-color:var(--red-soft)}
+.forecast-card.green{background:var(--green-bg);border-color:var(--green-soft)}
+.forecast-card .fc-lab{font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700}
+.forecast-card.red .fc-lab{color:var(--red-d)}
+.forecast-card.green .fc-lab{color:var(--green-d)}
+.forecast-card .fc-num{font-weight:900;font-size:74px;line-height:.95;letter-spacing:-.04em;color:var(--ink);margin-top:4px}
+.forecast-card.red .fc-num{color:var(--red)}
+.forecast-card.green .fc-num{color:var(--green-d)}
+.forecast-card .fc-unit{font-size:24px;font-weight:700;margin-left:10px;color:inherit}
+.forecast-card .fc-sub{font-size:14px;line-height:1.45;color:var(--ink-2);margin-top:6px;font-weight:500}
+
+.q-section{margin-top:22px}
+.q-section-title{font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700;margin-bottom:12px}
+.q-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.q-card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:6px;position:relative}
+.q-card.peak{background:var(--red-bg);border-color:var(--red-soft)}
+.q-card .q{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.q-card.peak .q{color:var(--red)}
+.q-card .v{font-weight:800;font-size:42px;line-height:1;color:var(--ink);margin-top:6px;letter-spacing:-.03em}
+.q-card.peak .v{color:var(--red)}
+.q-card .u{font-size:13px;color:var(--muted)}
+.q-bar{height:6px;background:var(--line);border-radius:99px;margin-top:18px;position:relative;overflow:hidden}
+.q-bar i{position:absolute;left:0;top:0;height:100%;background:var(--red-l);border-radius:99px;width:0;transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.q-card.peak .q-bar i{background:var(--red)}
+
+/* Plan slide */
+.plan-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:24px}
+
+/* Navigation */
+.nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(26,24,20,.08);backdrop-filter:blur(10px);border-radius:99px;padding:7px 14px;z-index:100;border:1px solid rgba(26,24,20,.12)}
+.nav button{background:none;border:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);transition:background .2s;font-size:15px;font-weight:600}
+.nav button:hover{background:rgba(26,24,20,.08)}
+.nav .counter{font-size:12.5px;font-weight:700;color:var(--ink);min-width:48px;text-align:center;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+
+.help{position:fixed;bottom:20px;right:20px;font-size:11px;color:var(--muted);z-index:100;letter-spacing:.04em;font-weight:500;background:rgba(250,244,229,.85);backdrop-filter:blur(8px);padding:8px 12px;border-radius:8px;border:1px solid var(--line)}
+
+/* Reveal animations */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .65s ease, transform .65s ease}
+.slide.active .reveal{opacity:1;transform:none}
+.slide.active .reveal.d1{transition-delay:.08s}
+.slide.active .reveal.d2{transition-delay:.18s}
+.slide.active .reveal.d3{transition-delay:.28s}
+.slide.active .reveal.d4{transition-delay:.38s}
+.slide.active .reveal.d5{transition-delay:.48s}
+.slide.active .reveal.d6{transition-delay:.58s}
+.slide.active .reveal.d7{transition-delay:.68s}
+
+@media (max-width: 1280px){
+  .slide{padding:36px 48px 56px}
+  .cover .left h1{font-size:74px}
+  .bignum{font-size:180px}
+  .cmp .col .big{font-size:110px}
+  .divider-bgnum{font-size:420px}
+}
+</style>
+</head>
+<body>
+<div class="deck" id="deck"></div>
+
+<div class="nav">
+  <button id="prev" aria-label="Назад">←</button>
+  <div class="counter"><span id="cur">1</span> / <span id="tot">16</span></div>
+  <button id="next" aria-label="Вперёд">→</button>
+</div>
+<div class="help">← → · Space · Home/End · F</div>
+
+<script>
+/* ============================ CONFIG ============================ */
+// Логотип Resfood: при необходимости замените URL ниже на актуальный (SVG/PNG).
+// Если изображение не загрузится — отобразится текстовая метка "R".
+const LOGO_URL = 'https://www.resfood.ru/local/templates/main/img/logo.svg';
+
+/* ============================ SLIDES DATA ============================ */
+const SLIDES = [
+  // 1 — Cover
+  {
+    n: '01', kicker: 'Resfood · Маркетплейсы · Управленческий год 2025/26',
+    render: () => `
+      <div class="cover">
+        <div class="left">
+          <h1 class="reveal d1">Маркетплейсы<br/><span class="accent">Resfood</span></h1>
+          <div class="meta reveal d3">Отчётное собрание · управленческий год 2025/26</div>
+        </div>
+        <div class="right">
+          <div class="num reveal d2">405</div>
+          <div class="unit-line reveal d3">МЛН ₽</div>
+          <div class="label reveal d4">Выручка маркетплейсов в 2025/26 — около 7% общего оборота группы (~5,5 млрд ₽). Сумма небольшая в общей структуре, но значимая для нас.</div>
+        </div>
+      </div>`
+  },
+  // 2 — Five reasons
+  {
+    n: '02', kicker: 'Контекст',
+    render: () => `
+      <div class="reveal d1"><div class="eyebrow">Стратегическая роль канала</div>
+      <h2 class="t">Почему канал значим</h2>
+      <p class="sub">Resfood — компания с ядром в HoReCa B2B. Маркетплейсы для нас — B2C-канал. Не основной фокус компании, но стратегически важное направление.</p></div>
+      <div class="five-grid">
+        ${[
+          {n:'01',t:'Самый растущий канал РФ',m:'#1 по темпам роста в рознице',b:'Маркетплейсы — единственный канал, который растёт быстрее всех других сегментов розничной торговли. Не присутствовать — значит уступить долю там, где покупатель впервые встречает продукт.'},
+          {n:'02',t:'Прямой контакт с B2C',m:'Прямая видимость покупателя',b:'Видим конечного потребителя — то, чего нет в B2B через дистрибьюторов. Кто берёт, как готовит, что пишет в отзывах — всё видно только здесь.'},
+          {n:'03',t:'Узнаваемость бренда',m:'17 брендов · B2C-витрина',b:'Карточки на Ozon и WB работают как витрина: покупатель знакомится с TIDORI, ESORO, GENSO. Инсайты обогащают весь бренд.'},
+          {n:'04',t:'Тестовый полигон новых SKU',m:'×77 — Кочукару Genso',b:'За неделю проверяем спрос, цену, упаковку, описание. В B2B такой обратной связи нет — там цикл год-два через дистрибьютора.'},
+          {n:'05',t:'Контроль канала',m:'Контроль над брендом и ценой',b:'Если нас нет на МП — встанет конкурент или перекупщик с нашими же продуктами по своим правилам. Канал нужно держать самим.'},
+        ].map((r,i)=>`<div class="reason reveal d${i+2}"><div class="num">${r.n}</div><div class="title">${r.t}</div><div class="metric">${r.m}</div><div class="body">${r.b}</div></div>`).join('')}
+      </div>`
+  },
+  // 3 — Section divider 01
+  {
+    n:'03', kicker:'Раздел 01',
+    render:()=>`
+      <div class="divider-slide">
+        <div class="divider-bgnum reveal d1">01</div>
+        <div class="divider-content reveal d2">
+          <div class="divider-lab"><span class="dotg"></span>Раздел 01</div>
+          <h2>Что канал дал<br/>в 2025/26</h2>
+          <div class="divider-underline"></div>
+          <div class="divider-sub">Финансовые результаты года — выручка, валовая прибыль, две площадки.</div>
+        </div>
+      </div>`
+  },
+  // 4 — +64%
+  {
+    n:'04', kicker:'Главный финансовый результат года',
+    render:()=>`
+      <div class="bignum-wrap" style="height:100%">
+        <div class="eyebrow reveal d1">Прирост выручки 2025/26 vs 2024/25</div>
+        <div class="bignum red reveal d2">+64<span class="unit">%</span></div>
+        <div class="caption reveal d3">247&nbsp;→&nbsp;405&nbsp;млн&nbsp;₽. Маржинальность удержана на уровне <b style="color:var(--ink);font-weight:800">18,6%</b> — несмотря на рост комиссий, динамической логистики и рекламных ставок.</div>
+        <div class="note reveal d4">Прирост валовой прибыли группы за счёт МП: <b style="color:var(--green);font-weight:800">+29,5 млн ₽</b>. Самый сильный год для направления за всю историю.</div>
+      </div>`
+  },
+  // 5 — Two platforms comparison
+  {
+    n:'05', kicker:'Две площадки — две разные истории',
+    render:()=>`
+      <div class="cmp">
+        <div class="col ozon reveal d1">
+          <div>
+            <div class="brand-row"><span class="brand-chip ozon">OZON</span><span class="brand-tag">Драйвер года</span></div>
+            <h4>Ozon · драйвер года</h4>
+            <div class="big">+87%</div>
+            <div class="label">Выручка <b>176,7&nbsp;→&nbsp;330,8&nbsp;млн&nbsp;₽</b></div>
+            <div class="small">ВП +81% (34,2 → 61,9 млн ₽) · Рент. 19% → 19%</div>
+          </div>
+          <div class="hl-pill" style="margin-top:18px"><span class="dot-r"></span>На нём мы выиграли год</div>
+        </div>
+        <div class="vs reveal d2">vs</div>
+        <div class="col wb reveal d3">
+          <div>
+            <div class="brand-row"><span class="brand-chip wb">WB</span><span class="brand-tag">Управляемая стагнация</span></div>
+            <h4>Wildberries · управляемая стагнация</h4>
+            <div class="big">+6%</div>
+            <div class="label">Выручка <b>70,2&nbsp;→&nbsp;74,6&nbsp;млн&nbsp;₽</b></div>
+            <div class="small">ВП +15% (11,8 → 13,6 млн ₽) · Рент. 17% → 18%</div>
+          </div>
+          <div style="margin-top:18px;font-size:13px;line-height:1.5;color:var(--ink-2)">
+            Внешние ограничения площадки: закрытие складов, продукты не принимали, коэффициенты логистики ×2–3, правила рекламы менялись без предупреждения. План по WB на 2026/27 — точечный возврат через автобидер.
+          </div>
+        </div>
+      </div>`
+  },
+  // 6 — Chart: revenue + GP by platforms
+  {
+    n:'06', kicker:'Фактологический слайд', chart:'rev_gp',
+    render:()=>`
+      <div class="chart-slide">
+        <div class="reveal d1">
+          <div class="eyebrow">Выручка и валовая прибыль · млн ₽</div>
+          <h2 class="t">Выручка и ВП по платформам, 2024/25 → 2025/26</h2>
+        </div>
+        <div class="chart-canvas reveal d2"><canvas id="chartRevGP"></canvas></div>
+        <div class="chart-anno reveal d3">
+          <div class="hl-pill"><span class="dot-r"></span>Ozon: +154 млн ₽ выручки, +27,7 млн ₽ ВП</div>
+          <div>Маржа группы: <b>18,6% → 18,6%</b></div>
+          <div>Прирост ВП: <b style="color:var(--green)">+29,5 млн ₽</b></div>
+          <div>Рент. WB <b>17→18%</b> · Ozon <b>19→19%</b></div>
+        </div>
+      </div>`
+  },
+  // 7 — ABC split
+  {
+    n:'07', kicker:'Закон Парето в чистом виде',
+    render:()=>`
+      <div class="reveal d1"><div class="eyebrow">ABC-анализ · сопоставимый ассортимент Q4 2025 + Q1 2026</div>
+      <h2 class="t">37% SKU дают 80% выручки</h2></div>
+      <div class="split" style="margin-top:24px">
+        <div class="card A reveal d2">
+          <div class="class-row">
+            <div class="class-badge">A</div>
+            <div class="meta"><div class="lbl">Класс A · приоритет</div><div class="name">Что двигает выручку</div></div>
+          </div>
+          <h3>72 SKU делают 80% оборота</h3>
+          <div class="stats">
+            <div class="stat"><div class="v">72</div><div class="n">SKU (37% портфеля)</div></div>
+            <div class="stat"><div class="v">79,8%</div><div class="n">выручки</div></div>
+            <div class="stat"><div class="v">81,9%</div><div class="n">маржи</div></div>
+          </div>
+          <div class="desc">Контент, реклама, остатки — сюда в первую очередь. <b>24 SKU перешли в A</b> за период; 16 из них — взрывной переход C→A (в основном корейская/тайская кухня).</div>
+        </div>
+        <div class="card C reveal d3">
+          <div class="class-row">
+            <div class="class-badge">C</div>
+            <div class="meta"><div class="lbl">Класс C · кандидаты на вывод</div><div class="name">Хвост — операционный шум</div></div>
+          </div>
+          <h3>72 SKU дают 5% выручки</h3>
+          <div class="stats">
+            <div class="stat"><div class="v">72</div><div class="n">SKU (37% портфеля)</div></div>
+            <div class="stat"><div class="v">5,0%</div><div class="n">выручки</div></div>
+            <div class="stat"><div class="v">2,7%</div><div class="n">маржи</div></div>
+          </div>
+          <div class="desc">Процедура 2026/27: 2 квартала подряд оборот <b>&lt;30 тыс. ₽</b> → автоматический вывод. Освобождает склад, время менеджеров, рекламный бюджет.</div>
+        </div>
+      </div>`
+  },
+  // 8 — TOP-15 SKU chart
+  {
+    n:'08', kicker:'Где собирается выручка', chart:'top15',
+    render:()=>`
+      <div class="chart-slide" style="grid-template-rows:auto 1fr auto">
+        <div class="reveal d1">
+          <div class="eyebrow">ТОП-15 SKU · Q4 2025 + Q1 2026 vs Q2+Q3 2025, млн ₽</div>
+          <h2 class="t">ТОП-15 SKU: где собирается выручка</h2>
+        </div>
+        <div class="chart-canvas reveal d2"><canvas id="chartTop15"></canvas></div>
+        <div class="chart-anno reveal d3">
+          <div class="hl-pill"><span class="dot-r"></span>Кочукару Genso ×77 — кейс перехода C→A</div>
+          <div>Корейская волна: мисо +43–54% · такуан +76% · рамен +41% · рыбный соус +91%</div>
+          <div>Ядро: нори Tidori 14,5 млн ₽ (+36%)</div>
+        </div>
+      </div>`
+  },
+  // 9 — Market shares table
+  {
+    n:'09', kicker:'Где №1, где зона роста, куда не идём',
+    render:()=>`
+      <div class="reveal d1"><div class="eyebrow">Доли в категориях на Ozon · ноябрь 2025 — февраль 2026</div>
+      <h2 class="t">Доли в категориях на Ozon</h2></div>
+      <div class="tbl-wrap reveal d2">
+      <table class="cat">
+        <thead><tr>
+          <th>Категория</th><th style="text-align:right">Рынок</th><th>Наша доля</th><th>Лидер</th><th>Что делаем</th>
+        </tr></thead>
+        <tbody>
+          ${[
+            {c:'Соевые пасты',m:'16 млн ₽',sh:'25,2%',shp:84,lead:'Япон Макарон 22,7%',a:'№1 — держим, цель закрепить',tag:'green',top:true},
+            {c:'Нори / Онигири',m:'50 млн ₽',sh:'18,1%',shp:60,lead:'Каминари 12,5%',a:'№1 — расширяем линейку',tag:'green',top:true},
+            {c:'Прочие соусы',m:'138 млн ₽',sh:'6,3%',shp:21,lead:'ТАМАКИ 27,6%',a:'Зона роста: +5 п.п. = +7 млн ₽',tag:'yellow'},
+            {c:'Киноа',m:'17 млн ₽',sh:'7,0%',shp:23,lead:'Narmak 17,5%',a:'Оставляем как есть',tag:'gray'},
+            {c:'Кокосовое молоко',m:'62 млн ₽',sh:'1,6%',shp:5,lead:'UFOOD 28,4%',a:'Пересмотр стратегии',tag:'yellow'},
+            {c:'Кокосовая сгущёнка',m:'35 млн ₽',sh:'1,7%',shp:5,lead:'ORGANIC LAB 45,6%',a:'Пересмотр стратегии',tag:'yellow'},
+            {c:'Семена чиа',m:'145 млн ₽',sh:'0,4%',shp:1,lead:'Miopharm 31,2%',a:'Не боремся — рынок чужой',tag:'gray'},
+            {c:'Лапша БП',m:'97 млн ₽',sh:'0,8%',shp:3,lead:'KOI 16,9%',a:'Узкое позиционирование',tag:'gray'},
+            {c:'Панировочные сухари',m:'57 млн ₽',sh:'0,7%',shp:2,lead:'Уралэкофуд 56,8%',a:'Не основной фокус',tag:'gray'},
+          ].map(r=>`<tr><td class="cat-name">${r.c}</td>
+            <td style="text-align:right">${r.m}</td>
+            <td class="${r.top?'lead-1':''}"><span class="share">${r.sh}</span><div class="bar-mini" data-w="${r.shp}"><i></i></div></td>
+            <td>${r.lead}</td>
+            <td><span class="tag ${r.tag}">${r.a}</span></td></tr>`).join('')}
+        </tbody>
+      </table></div>
+      <div class="tiny reveal d3" style="margin-top:14px">В кокосах — есть «крючки» из отзывов, будем тестировать карточками.</div>`
+  },
+  // 10 — Section divider 02
+  {
+    n:'10', kicker:'Раздел 02',
+    render:()=>`
+      <div class="divider-slide">
+        <div class="divider-bgnum reveal d1">02</div>
+        <div class="divider-content reveal d2">
+          <div class="divider-lab"><span class="dotg"></span>Раздел 02</div>
+          <h2>Как мы делаем рост<br/>командой из&nbsp;3&nbsp;человек</h2>
+          <div class="divider-underline"></div>
+          <div class="divider-sub">Технологии, AI-агенты, реклама v7 — что компенсирует размер команды против 5–10 у конкурентов.</div>
+        </div>
+      </div>`
+  },
+  // 11 — Three tools
+  {
+    n:'11', kicker:'Три инструмента, которые сделали год',
+    render:()=>`
+      <div class="reveal d1"><div class="eyebrow">Скорость важнее бюджета</div>
+      <h2 class="t">Три инструмента, которые сделали год</h2>
+      <p class="sub">Команда — 3 человека против 5–10 у конкурентов. Компенсируем технологиями: зрелые конкуренты делают подобный анализ за неделю — мы за день.</p></div>
+      <div class="three-col">
+        ${[
+          {n:'01',cls:'',t:'AI-агенты — наша разработка',m:'−30–40% времени менеджера',b:'Два собственных LLM-агента: <b>Маркетолог</b> (карточки, цены, конкуренты, отзывы → правки в карточку) и <b>Аналитик</b> (категория, ЦА, стратегия входа). В 2026/27 — каждое решение по цене/контенту/рекламе сопровождается рекомендацией агента.'},
+          {n:'02',cls:'green',t:'Автоматизация и юнит-экономика',m:'18,6% маржа удержана',b:'<b>Seller24</b> — контроль юнит-экономики, <b>Huckster</b> — автоценообразование. Эти инструменты позволили компенсировать удвоение комиссий и рост рекламных ставок в течение года.'},
+          {n:'03',cls:'',t:'Реклама v7 — сценарный план',m:'4% ДРР · vs 20–25% на запуске',b:'Потолок CPC/CPM по категориям, контроль ДРР по этапам (старт→анализ→оптимизация→масштабирование), стоп-сигналы. Подключение «рекомендаций» по правилам: рейтинг ≥4,5, отзывов ≥30, прибыльность подтверждена.'},
+        ].map((r,i)=>`<div class="col-card ${r.cls} reveal d${i+2}"><div class="num">${r.n}</div><div class="metric">${r.m}</div><h4>${r.t}</h4><div class="body">${r.b}</div></div>`).join('')}
+      </div>`
+  },
+  // 12 — AI Amarant link
+  {
+    n:'12', kicker:'Живой пример',
+    render:()=>`
+      <div class="ai-slide">
+        <div class="left">
+          <div class="eyebrow reveal d1">Живой пример работы AI-Аналитика</div>
+          <h2 class="t reveal d2" style="margin-top:14px">AI-разбор категории<br/><span style="color:var(--red)">«Семена Амарант»</span></h2>
+          <p class="sub reveal d3" style="margin-top:24px">AI-Аналитик получает на вход категорию и за несколько минут выдаёт: структуру ниши, топ-10 конкурентов с ценами и оборотом, боли клиентов из отзывов, портрет покупателя и стратегию входа.</p>
+          <div class="tiny reveal d4" style="margin-top:20px">Это и есть наше операционное преимущество: то, на что у конкурента уходит неделя, мы делаем за день.</div>
+        </div>
+        <div class="right reveal d3">
+          <div>
+            <div class="lab">Live demo · открыть прямо со слайда</div>
+            <div class="ttl">Реальный отчёт <span class="accent">AI-Аналитика</span></div>
+          </div>
+          <div>
+            <div class="url">mothfilm.github.io/amarant_04-26</div>
+            <a class="cta" href="https://mothfilm.github.io/amarant_04-26/" target="_blank" rel="noopener">Открыть интерактивный разбор <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </div>`
+  },
+  // 13 — Section divider 03
+  {
+    n:'13', kicker:'Раздел 03',
+    render:()=>`
+      <div class="divider-slide">
+        <div class="divider-bgnum reveal d1">03</div>
+        <div class="divider-content reveal d2">
+          <div class="divider-lab"><span class="dotg"></span>Раздел 03</div>
+          <h2>Что дальше:<br/>прогноз и план 2026/27</h2>
+          <div class="divider-underline"></div>
+          <div class="divider-sub">Консервативный прогноз +34%, причины замедления темпов и конкретные инициативы года.</div>
+        </div>
+      </div>`
+  },
+  // 14 — Forecast
+  {
+    n:'14', kicker:'Прогноз 2026/27',
+    render:()=>`
+      <div class="reveal d1"><div class="eyebrow">Прогноз 2026/27 · консервативный сценарий</div>
+      <h2 class="t" style="font-size:36px">544 млн ₽ выручки · 96,5 млн ₽ чистой прибыли</h2></div>
+      <div class="forecast-grid">
+        <div class="forecast-card red reveal d2">
+          <div class="fc-lab">Прогноз выручки</div>
+          <div class="fc-num">544<span class="fc-unit">млн ₽</span></div>
+          <div class="fc-sub">+34% к 2025/26 (с базы 405 млн ₽). Прогноз консервативный.</div>
+        </div>
+        <div class="forecast-card green reveal d3">
+          <div class="fc-lab">Чистая прибыль</div>
+          <div class="fc-num">96,5<span class="fc-unit">млн ₽</span></div>
+          <div class="fc-sub">Маржа ~17,8%. Рост абсолютной прибыли при более скромном темпе выручки.</div>
+        </div>
+      </div>
+      <div class="q-section reveal d4">
+        <div class="q-section-title">Поквартальная разбивка прогноза, млн ₽</div>
+        <div class="q-grid">
+          ${[
+            {q:'Q1 2026/27',v:'108',h:60},
+            {q:'Q2 2026/27',v:'126',h:70},
+            {q:'Q3 · пик сезона',v:'180',h:100,peak:true},
+            {q:'Q4 2026/27',v:'130',h:72},
+          ].map(q=>`<div class="q-card ${q.peak?'peak':''}"><div class="q">${q.q}</div><div class="v">${q.v}<span style="font-size:15px;color:var(--muted);font-weight:600"> млн ₽</span></div><div class="q-bar"><i data-h="${q.h}"></i></div></div>`).join('')}
+        </div>
+      </div>`
+  },
+  // 15 — Reasons for slowdown
+  {
+    n:'15', kicker:'Пять объективных факторов',
+    render:()=>`
+      <div class="reveal d1"><div class="eyebrow">Прогноз +34% vs текущий +64%</div>
+      <h2 class="t">Причины снижения темпов роста</h2>
+      <p class="sub">Это не плохие новости — это нормальная зрелость канала. Первые три фактора рыночные, четвёртый макро, пятый — внутренний ограничитель.</p></div>
+      <div class="three-col five">
+        ${[
+          {n:'01',cls:'',t:'Эффект высокой базы',m:'405 млн ₽ — новая база',b:'Шли с 247 млн ₽, теперь база 405. Тот же абсолютный прирост в процентах меньше. От 405 ещё +60% = 650+ млн — гонка с лидерами.'},
+          {n:'02',cls:'green',t:'Тарифы площадок',m:'+3–5 п.п. · +30% логистика',b:'Ожидается +3–5 п.п. по комиссиям и +30% по динамической логистике. Часть прироста уходит площадке через цены и ДРР.'},
+          {n:'03',cls:'',t:'Реклама дороже органики',m:'+1,5–2 п.п. в маркетинг',b:'Карточка без рекламы практически невидима — реклама стала «налогом», а не опцией. Для удержания позиций нужно платить больше за CPM/CPC.'},
+          {n:'04',cls:'green',t:'Покупательская способность',m:'Чек растёт медленнее инфляции',b:'Потребитель режет «необязательные» позиции — а это часть нашего ассортимента. Налоговые изменения заложены консервативно.'},
+          {n:'05',cls:'',t:'Цикл новых SKU',m:'4–6 месяцев — цикл запуска',b:'В первой половине 2026/27 новых продуктов фактически не будет. Реалистичный запуск — Q2. Первое полугодие даст рост только на текущей линейке.'},
+        ].map((r,i)=>`<div class="col-card ${r.cls} reveal d${i+2}"><div class="num">${r.n}</div><div class="metric">${r.m}</div><h4>${r.t}</h4><div class="body">${r.b}</div></div>`).join('')}
+      </div>`
+  },
+  // 16 — Plan 2026/27
+  {
+    n:'16', kicker:'План 2026/27',
+    render:()=>`
+      <div class="reveal d1"><div class="eyebrow">Три фокуса 2026: нарастить долю · повысить эффективность · оцифровать решения</div>
+      <h2 class="t">План 2026/27 — конкретные инициативы</h2></div>
+      <div class="plan-grid">
+        ${[
+          {n:'01',cls:'',t:'Ассортимент и категории',m:'5+ новых SKU Genso',b:'5+ новых SKU Genso в корейской волне (Кочукару, Кочудян, мисо, Самдян, ферментированные пасты). Цель — №1 в соевых пастах. <b>Esoro</b> — внешний прогрев бренда через посевы и UGC.'},
+          {n:'02',cls:'green',t:'Усиление B2B сегмента',m:'1–2 крупных SKU на бренд',b:'Линейка крупных упаковок и B2B-аудитория на МП: имбирь 1,5 кг, панировка-панко, рис 25 кг, соевый соус 18 л. Привлечение B2B-трафика через внутренние и внешние каналы.'},
+          {n:'03',cls:'',t:'Возобновление работы с WB',m:'Автобидер — ключевой инструмент',b:'Возвращаемся точечно — только товары с быстрой оборачиваемостью и хорошей маржой. Управление ставками — через автобидер, ручного управления минимум.'},
+          {n:'04',cls:'green',t:'Технологии и реклама',m:'Q2 26/27 — автобидер в проде',b:'Автобидер — внедрение в Q2 (главный инструмент новой стратегии WB). Масштабирование AI-Маркетолога и AI-Аналитика. <b>AI-агент по рекламной стратегии</b> — следующая ступень.'},
+          {n:'05',cls:'',t:'Цифровизация и метрики',m:'1С↔МП — приоритет №1',b:'Главный инфраструктурный приоритет — полная интеграция 1С с Ozon (API Premium Plus открыт) и WB. Единый источник правды по марже и оборачиваемости. Метрики в общий BI компании.'},
+        ].map((r,i)=>`<div class="col-card ${r.cls} reveal d${i+2}"><div class="num">${r.n}</div><div class="metric">${r.m}</div><h4>${r.t}</h4><div class="body">${r.b}</div></div>`).join('')}
+      </div>`
+  },
+];
+
+/* ============================ RENDER LAYER ============================ */
+const deck = document.getElementById('deck');
+SLIDES.forEach((s,i)=>{
+  const el = document.createElement('section');
+  el.className = 'slide';
+  el.dataset.idx = i;
+  el.innerHTML = `
+    <div class="tbar">
+      <div class="brand"><div class="brand-mark"><div class="sq"><img src="${LOGO_URL}" alt="Resfood" onerror="this.parentNode.innerHTML='R'"/></div><div class="nm">Resfood · Маркетплейсы 2025/26</div></div></div>
+      <div class="right"><span>${s.kicker||''}</span><span class="dot"></span><span>${s.n} / 16</span></div>
+    </div>
+    <div class="body">${s.render()}</div>
+    <div class="fbar"><span>RESFOOD · ОТЧЁТНОЕ СОБРАНИЕ</span><div class="progress"><i style="width:${((i+1)/SLIDES.length)*100}%"></i></div><span>${s.n}</span></div>
+  `;
+  deck.appendChild(el);
+});
+
+/* ============================ NAVIGATION ============================ */
+let idx = 0;
+const slides = [...document.querySelectorAll('.slide')];
+const cur = document.getElementById('cur');
+const tot = document.getElementById('tot');
+tot.textContent = slides.length;
+
+function show(n){
+  n = Math.max(0, Math.min(slides.length-1, n));
+  slides.forEach((s,i)=>{
+    s.classList.toggle('active', i===n);
+    s.classList.toggle('prev', i<n);
+  });
+  idx = n;
+  cur.textContent = n+1;
+  setTimeout(()=> animate(slides[n]), 250);
+  if(window.location.hash !== `#${n+1}`) history.replaceState(null,'',`#${n+1}`);
+}
+function animate(slide){
+  slide.querySelectorAll('.bar-mini').forEach(b=>{
+    const w = b.dataset.w; const i = b.querySelector('i');
+    if(i) i.style.width = w + '%';
+  });
+  slide.querySelectorAll('.q-bar i').forEach(i=>{
+    const h = i.dataset.h;
+    if(h) i.style.width = h + '%';
+  });
+  const data = SLIDES[+slide.dataset.idx];
+  if(data.chart === 'rev_gp' && !slide._chart){ slide._chart = drawRevGP(slide.querySelector('#chartRevGP')); }
+  if(data.chart === 'top15' && !slide._chart){ slide._chart = drawTop15(slide.querySelector('#chartTop15')); }
+}
+
+/* ============================ CHARTS ============================ */
+const PAL = {
+  ink: '#1A1814', muted: '#7A7066', red: '#C8302A', redD:'#9E2520',
+  redL:'#E89189', green: '#2D4A35', greenL:'#6E8B6F', line: '#E5DAC0',
+  paper:'#FAF4E5'
+};
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.font.weight = '500';
+Chart.defaults.color = PAL.muted;
+Chart.defaults.borderColor = PAL.line;
+
+function drawRevGP(canvas){
+  if(!canvas) return null;
+  const ctx = canvas.getContext('2d');
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Wildberries', 'Ozon', 'ИТОГО'],
+      datasets: [
+        { label: 'Выручка 2024/25, млн ₽', data:[70.2, 176.7, 246.9], backgroundColor: PAL.redL, borderRadius: 5, barPercentage:.6, categoryPercentage:.7 },
+        { label: 'Выручка 2025/26, млн ₽', data:[74.6, 330.8, 405.4], backgroundColor: PAL.red, borderRadius: 5, barPercentage:.6, categoryPercentage:.7 },
+        { label: 'ВП 2024/25, млн ₽', data:[11.8, 34.2, 46.0], backgroundColor: PAL.greenL, borderRadius: 5, barPercentage:.6, categoryPercentage:.7 },
+        { label: 'ВП 2025/26, млн ₽', data:[13.6, 61.9, 75.6], backgroundColor: PAL.green, borderRadius: 5, barPercentage:.6, categoryPercentage:.7 },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false, animation:{duration: 900, easing:'easeOutQuart'},
+      plugins:{
+        legend:{position:'top', align:'end', labels:{boxWidth:10, boxHeight:10, padding:14, font:{size:12, weight:'600'}, color:PAL.ink}},
+        tooltip:{backgroundColor:PAL.ink, titleColor:'#FFF', bodyColor:'#FFF', padding:12, cornerRadius:8, titleFont:{weight:'700'}}
+      },
+      scales:{
+        x:{grid:{display:false}, ticks:{font:{size:13,weight:'700'}, color:PAL.ink}},
+        y:{grid:{color:PAL.line, drawBorder:false}, ticks:{callback:(v)=>v+' млн', font:{size:11}}}
+      }
+    }
+  });
+}
+function drawTop15(canvas){
+  if(!canvas) return null;
+  const items = [
+    ['Нори Tidori 100 листов', 14.5, 10.7, '+36%'],
+    ['Онигири нори Tidori', 6.8, 4.3, '+59%'],
+    ['Нори Tidori 50 листов', 5.6, 5.5, '+2%'],
+    ['Соус Терияки Genso 1,5 л', 4.5, 2.8, '+57%'],
+    ['Юдзу Чай ESORO 1 кг', 4.1, 2.9, '+44%'],
+    ['Каффир лайм Genso', 4.1, 2.6, '+57%'],
+    ['Кочукару Genso · ×77', 3.6, 0.047, '×77'],
+    ['Рисовая бумага Kekeshi 500 г', 3.4, 3.1, '+9%'],
+    ['Мисо паста светлая Genso', 3.3, 2.2, '+54%'],
+    ['Нори Tidori (другой формат)', 3.3, 2.7, '+23%'],
+    ['Соус Гриль got2eat 1 кг', 3.0, 2.6, '+16%'],
+    ['Дайкон такуан Hansey 600 г', 3.0, 1.7, '+76%'],
+    ['Мисо паста тёмная Genso', 2.9, 2.0, '+43%'],
+    ['Лапша Рамен Kekeshi 1 кг', 2.7, 1.9, '+41%'],
+    ['Соус рыбный Resfood 700 мл', 2.7, 1.4, '+91%'],
+  ];
+  // Custom plugin: draw +XX% to the right of the current-period bar
+  const deltaPlugin = {
+    id: 'deltaLabels',
+    afterDatasetsDraw(chart){
+      const {ctx, scales:{x,y}} = chart;
+      const ds = chart.getDatasetMeta(1); // current period dataset
+      if(!ds || !ds.data) return;
+      ctx.save();
+      ctx.font = '700 12px Inter, system-ui, sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'left';
+      ds.data.forEach((bar, i)=>{
+        const delta = items[i][3];
+        const isHighlight = delta === '×77' || (delta.startsWith('+') && parseInt(delta.slice(1)) >= 50);
+        ctx.fillStyle = isHighlight ? PAL.red : PAL.green;
+        ctx.fillText(delta, bar.x + 8, bar.y);
+      });
+      ctx.restore();
+    }
+  };
+  const ctx = canvas.getContext('2d');
+  return new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: items.map(r=>r[0]),
+      datasets:[
+        { label:'Q2+Q3 2025, млн ₽', data: items.map(r=>r[2]), backgroundColor: PAL.redL, borderRadius: 4, categoryPercentage:.85, barPercentage:.85 },
+        { label:'Q4 2025 + Q1 2026, млн ₽', data: items.map(r=>r[1]), backgroundColor: PAL.red, borderRadius: 4, categoryPercentage:.85, barPercentage:.85 },
+      ]
+    },
+    plugins: [deltaPlugin],
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      animation:{duration: 900, easing:'easeOutQuart'},
+      layout:{padding:{right: 60}},
+      plugins:{
+        legend:{position:'top', align:'end', labels:{boxWidth:10, boxHeight:10, padding:12, font:{size:12, weight:'600'}, color:PAL.ink}},
+        tooltip:{backgroundColor:PAL.ink, titleColor:'#FFF', bodyColor:'#FFF', padding:12, cornerRadius:8,
+          callbacks:{ label:(c)=>{ const r = items[c.dataIndex]; return `${c.dataset.label}: ${c.parsed.x.toFixed(c.parsed.x<0.1?3:1)} · Δ ${r[3]}`; } }
+        },
+      },
+      scales:{
+        x:{grid:{color:PAL.line, drawBorder:false}, ticks:{callback:v=>v+' млн', font:{size:11}}, beginAtZero:true},
+        y:{grid:{display:false}, ticks:{font:{size:11.5,weight:'600'}, color:PAL.ink}}
+      }
+    }
+  });
+}
+
+/* ============================ EVENTS ============================ */
+document.getElementById('next').onclick = ()=> show(idx+1);
+document.getElementById('prev').onclick = ()=> show(idx-1);
+window.addEventListener('keydown', e=>{
+  if(['ArrowRight','PageDown',' '].includes(e.key)){ e.preventDefault(); show(idx+1); }
+  if(['ArrowLeft','PageUp'].includes(e.key)){ e.preventDefault(); show(idx-1); }
+  if(e.key === 'Home'){ e.preventDefault(); show(0); }
+  if(e.key === 'End'){ e.preventDefault(); show(slides.length-1); }
+  if(e.key === 'f' || e.key === 'F'){ if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); }
+});
+let touchX = null;
+window.addEventListener('touchstart', e=> touchX = e.touches[0].clientX);
+window.addEventListener('touchend', e=>{
+  if(touchX===null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if(Math.abs(dx) > 50){ show(idx + (dx<0?1:-1)); }
+  touchX = null;
+});
+const initial = parseInt((location.hash||'#1').slice(1)) - 1;
+show(isNaN(initial)?0:initial);
+</script>
+</body>
+</html>
