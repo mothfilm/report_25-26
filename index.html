@@ -53,10 +53,12 @@ body{background:var(--bg)}
 /* Header bar */
 .tbar{display:flex;align-items:center;justify-content:space-between;font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;font-weight:600}
 .tbar .brand{display:flex;align-items:center;gap:12px}
-.brand-mark{display:flex;align-items:center;gap:0}
-.brand-mark .sq{width:32px;height:32px;border-radius:6px;background:var(--red);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:800;font-size:15px;letter-spacing:-.02em;overflow:hidden}
-.brand-mark .sq img{width:100%;height:100%;object-fit:contain;display:block}
-.brand-mark .nm{margin-left:12px;font-size:13px;font-weight:700;color:var(--ink);letter-spacing:.04em;text-transform:uppercase}
+.brand-mark{display:flex;align-items:center;gap:14px}
+/* Wordmark logo: red pill with "RESFOOD" inside */
+.brand-mark .logo{display:inline-flex;align-items:center;height:34px;padding:0 14px 0 12px;border-radius:8px;background:var(--red);color:#fff;font-weight:900;font-size:15px;letter-spacing:.06em;line-height:1;font-family:'Inter',sans-serif;position:relative;box-shadow:0 1px 2px rgba(158,37,32,.25)}
+.brand-mark .logo .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#fff;margin-left:6px;margin-top:9px}
+.brand-mark .logo img{height:22px;width:auto;display:block}
+.brand-mark .nm{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
 .tbar .right{display:flex;align-items:center;gap:18px}
 .dot{width:4px;height:4px;border-radius:50%;background:var(--ink);opacity:.3}
 
@@ -89,6 +91,9 @@ h3.t{font-weight:700;font-size:36px;line-height:1.1;letter-spacing:-0.015em}
 .cover .left h1{font-weight:800;font-size:90px;line-height:.96;letter-spacing:-.03em;color:var(--ink)}
 .cover .left h1 .accent{color:var(--red)}
 .cover .left .meta{margin-top:34px;font-size:13px;color:var(--muted);letter-spacing:.1em;font-weight:700;text-transform:uppercase}
+.cover .cover-logo{display:inline-flex;align-items:center;height:54px;padding:0 22px 0 20px;border-radius:12px;background:var(--red);color:#fff;font-weight:900;font-size:24px;letter-spacing:.06em;line-height:1;box-shadow:0 3px 8px rgba(158,37,32,.25);margin-bottom:36px;text-decoration:none}
+.cover .cover-logo .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;margin-left:8px;margin-top:14px}
+.cover .cover-logo img{height:36px;width:auto;display:block}
 .cover .right{display:flex;flex-direction:column;align-items:flex-end;gap:14px;padding-bottom:8px}
 .cover .right .num{font-weight:900;font-size:200px;line-height:.85;color:var(--red);letter-spacing:-.05em}
 .cover .right .label{font-size:16px;color:var(--ink-2);max-width:380px;text-align:right;line-height:1.5;font-weight:500}
@@ -292,9 +297,10 @@ table.cat td.lead-1 .share{color:var(--red)}
 
 <script>
 /* ============================ CONFIG ============================ */
-// Логотип Resfood: при необходимости замените URL ниже на актуальный (SVG/PNG).
-// Если изображение не загрузится — отобразится текстовая метка "R".
-const LOGO_URL = 'https://www.resfood.ru/local/templates/main/img/logo.svg';
+// Логотип Resfood: оставьте пустым ('') — будет отрисован текстовый wordmark "RESFOOD" в красной плашке.
+// Если хотите подставить настоящий логотип — впишите сюда URL картинки (SVG/PNG)
+// или относительный путь к локальному файлу: например, 'logo.svg' (положите файл рядом с этим HTML).
+const LOGO_URL = '';
 
 /* ============================ SLIDES DATA ============================ */
 const SLIDES = [
@@ -626,7 +632,11 @@ SLIDES.forEach((s,i)=>{
   el.dataset.idx = i;
   el.innerHTML = `
     <div class="tbar">
-      <div class="brand"><div class="brand-mark"><div class="sq"><img src="${LOGO_URL}" alt="Resfood" onerror="this.parentNode.innerHTML='R'"/></div><div class="nm">Resfood · Маркетплейсы 2025/26</div></div></div>
+      <div class="brand"><div class="brand-mark">${
+        LOGO_URL
+          ? `<a class="logo" style="text-decoration:none" href="https://www.resfood.ru" target="_blank" rel="noopener"><img src="${LOGO_URL}" alt="Resfood" onerror="this.outerHTML='RESFOOD<span class=&quot;dot&quot;></span>'"/></a>`
+          : `<span class="logo">RESFOOD<span class="dot"></span></span>`
+      }<div class="nm">Маркетплейсы 2025/26</div></div></div>
       <div class="right"><span>${s.kicker||''}</span><span class="dot"></span><span>${s.n} / 16</span></div>
     </div>
     <div class="body">${s.render()}</div>
